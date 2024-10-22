@@ -4,12 +4,16 @@
 
     <groupId>com.bonitasoft.presales.connector</groupId>
     <artifactId>connector-zip</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
     <name>connector-zip</name>
     <packaging>jar</packaging>
     
     <properties>
-         <!-- Maven -->
+        <!-- Github-->
+        <github.owner>bonitasoft-presales</github.owner>
+        <github.repo>${project.artifactId}</github.repo>
+
+        <!-- Maven -->
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -168,5 +172,23 @@
             </plugin>
         </plugins>
     </build>
+    <scm>
+        <url>https://github.com/${github.owner}/${github.repo}</url>
+        <developerConnection>scm:git:${project.scm.url}.git</developerConnection>
+        <connection>scm:git:${project.scm.url}.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>github</id>
+            <name>Github Package</name>
+            <url>https://maven.pkg.github.com/${github.owner}/${github.repo}</url>
+        </snapshotRepository>
+        <repository>
+            <id>github</id>
+            <name>Github Package</name>
+            <url>https://maven.pkg.github.com/${github.owner}/${github.repo}</url>
+        </repository>
+    </distributionManagement>
  
 </project>
