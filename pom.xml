@@ -4,7 +4,7 @@
 
     <groupId>com.bonitasoft.presales.connector</groupId>
     <artifactId>connector-zip</artifactId>
-    <version>1.3</version>
+    <version>1.3-SNAPSHOT</version>
     <name>connector-zip</name>
     <packaging>jar</packaging>
     
