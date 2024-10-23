@@ -14,7 +14,7 @@
         <github.repo>${project.artifactId}</github.repo>
 
         <!-- Maven -->
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -23,7 +23,7 @@
         <definition-version>1.0</definition-version>
         <impl-id>${definition-id}-impl</impl-id>
         <impl-version>${project.version}</impl-version>
-        <impl-main-class>com.bonitasoft.presales.connector.connectorZip</impl-main-class>
+        <impl-main-class>com.bonitasoft.presales.connector.ConnectorZip</impl-main-class>
 
         <!-- Bonita -->
         <bonita.engine.version>10.2.0</bonita.engine.version>
@@ -42,7 +42,7 @@
         <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
         <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
         <groovy-all.version>2.4.16</groovy-all.version>
-        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.1</maven-surefire-plugin.version>
     </properties>
     
     <dependencies>

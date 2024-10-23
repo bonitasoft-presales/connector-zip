@@ -16,11 +16,11 @@ import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class connectorZip extends AbstractConnector {
+public class ConnectorZip extends AbstractConnector {
 
-    private static final String DOCUMENTS_INPUT = "documentsToZip";
-    private static final String ZIP_FILE_NAME = "zipFileName";
-    private static final String OUTPUT_ZIP = "outputZipFile";
+    static final String DOCUMENTS_INPUT = "documentsToZip";
+    static final String ZIP_FILE_NAME = "zipFileName";
+    static final String OUTPUT_ZIP = "outputZipFile";
 
     Logger logger = Logger.getLogger("org.bonitasoft");
 
