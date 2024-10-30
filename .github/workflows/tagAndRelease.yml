@@ -80,15 +80,15 @@ jobs:
         run: |
           VERSION=$( ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout )
           FINAL_NAME=$( ./mvnw help:evaluate -Dexpression=project.build.finalName -q -DforceStdout )
-          echo "::set-output name=version::$VERSION"
-          echo "::set-output name=final-name::$FINAL_NAME"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "finalName=$FINAL_NAME" >> $GITHUB_OUTPUT
 
       - name: Display version
         id: display-version
         run: |
           echo "tag: ${{ steps.previous-tag.outputs.tag }}"
           echo "version: ${{ steps.get-version.outputs.version }}"
-          echo "final_name: ${{ steps.get-version.outputs.final-name }}"
+          echo "final_name: ${{ steps.get-version.outputs.finalName }}"
 
       - name: Create Release
         id: create-release
@@ -108,8 +108,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: target/${{ steps.get-version.outputs.final-name }}.jar
-          asset_name: ${{ steps.get-version.outputs.final-name }}.jar
+          asset_path: target/${{ steps.get-version.outputs.finalName }}.jar
+          asset_name: ${{ steps.get-version.outputs.finalName }}.jar
           asset_content_type: application/zip
 
       - name: Upload Release zip Asset
@@ -119,8 +119,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: target/${{ steps.get-version.outputs.final-name }}-impl.zip
-          asset_name: ${{ steps.get-version.outputs.final-name }}-impl.zip
+          asset_path: target/${{ steps.get-version.outputs.finalName }}.zip
+          asset_name: ${{ steps.get-version.outputs.finalName }}.zip
           asset_content_type: application/zip
 
       - name: Publish to Github Package
