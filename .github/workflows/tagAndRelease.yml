@@ -26,10 +26,10 @@ jobs:
           git config user.name "GitHub Actions"
 
       - name: Build and test
-        run: ./mvnw clean verify
+        run: ./mvnw --batch-mode --no-transfer-progress clean verify
 
       - name: Prepare release
-        run: ./mvnw release:prepare --batch-mode -Dusername=bonitasoft-presales -Dpassword=${{ secrets.GITHUB_TOKEN }}
+        run: ./mvnw release:prepare --batch-mode --no-transfer-progress -Dusername=bonitasoft-presales -Dpassword=${{ secrets.GITHUB_TOKEN }}
 
   create-release:
     name: Create Release
@@ -73,13 +73,13 @@ jobs:
         id: build-and-test
         run: |
           echo "build ${{ steps.previous-tag.outputs.tag }}"
-          ./mvnw clean verify
+          ./mvnw --batch-mode --no-transfer-progress clean verify
 
       - name: Get version from pom
         id: get-version
         run: |
-          VERSION=$( ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout )
-          FINAL_NAME=$( ./mvnw help:evaluate -Dexpression=project.build.finalName -q -DforceStdout )
+          VERSION=$( ./mvnw --batch-mode --no-transfer-progress help:evaluate -Dexpression=project.version -q -DforceStdout )
+          FINAL_NAME=$( ./mvnw --batch-mode --no-transfer-progress help:evaluate -Dexpression=project.build.finalName -q -DforceStdout )
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "finalName=$FINAL_NAME" >> $GITHUB_OUTPUT
 
@@ -124,6 +124,6 @@ jobs:
           asset_content_type: application/zip
 
       - name: Publish to Github Package
-        run: ./mvnw --batch-mode deploy
+        run: ./mvnw --batch-mode --no-transfer-progress deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

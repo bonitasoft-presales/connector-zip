@@ -14,8 +14,8 @@ jobs:
       - name: Get pom informations
         id: pom-info
         run: |
-          GROUP_ID=$( ./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout )
-          ARTIFACT_ID=$( ./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout )
+          GROUP_ID=$( ./mvnw --batch-mode --no-transfer-progress help:evaluate -Dexpression=project.groupId -q -DforceStdout )
+          ARTIFACT_ID=$( ./mvnw --batch-mode --no-transfer-progress help:evaluate -Dexpression=project.artifactId -q -DforceStdout )
           echo "group-id=$GROUP_ID" >> $GITHUB_OUTPUT
           echo "artifact-id=$ARTIFACT_ID" >> $GITHUB_OUTPUT
 
