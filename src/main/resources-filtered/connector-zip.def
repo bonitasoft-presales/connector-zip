@@ -8,6 +8,7 @@
 
   <!-- Connectors inputs -->
   <input mandatory="true" name="documentsToZip" type="java.lang.List"/>
+  <input mandatory="true" name="multipleDocumentsToZip" type="java.lang.List"/>
   <input mandatory="true" name="zipFileName" type="java.lang.String"/>
 
   <!-- Connectors outputs -->
@@ -16,6 +17,7 @@
   <!-- Pages -->
   <page id="configurationPage">
     <widget xsi:type="definition:List" id="documentsToZipWidget" inputName="documentsToZip"/>
+    <widget xsi:type="definition:List" id="multipleDocumentsToZip" inputName="multipleDocumentsToZip"/>
     <widget xsi:type="definition:Text" id="zipFileNameWidget" inputName="zipFileName"/>
   </page>
 </definition:ConnectorDefinition>

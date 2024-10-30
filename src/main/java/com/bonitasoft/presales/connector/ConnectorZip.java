@@ -1,5 +1,6 @@
 package com.bonitasoft.presales.connector;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -18,33 +19,47 @@ import java.util.zip.ZipOutputStream;
 
 public class ConnectorZip extends AbstractConnector {
 
-    static final String DOCUMENTS_INPUT = "documentsToZip";
+    static final String SINGLE_DOCUMENTS_INPUT = "documentsToZip";
+    static final String MULTIPLE_DOCUMENTS_INPUT = "multipleDocumentsToZip";
     static final String ZIP_FILE_NAME = "zipFileName";
     static final String OUTPUT_ZIP = "outputZipFile";
 
     Logger logger = Logger.getLogger("org.bonitasoft");
 
+    List<Document> allDocs;
+
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
-        if (getInputParameter(DOCUMENTS_INPUT) == null || !(getInputParameter(DOCUMENTS_INPUT) instanceof List)) {
-            throw new ConnectorValidationException("Input documentsToZip should be a list of Bonita documents.");
-        }
         if (getInputParameter(ZIP_FILE_NAME) == null || !(getInputParameter(ZIP_FILE_NAME) instanceof String)) {
             throw new ConnectorValidationException("You must provide a name for the output ZIP file.");
         }
+        allDocs = new ArrayList<>();
+        List<Document> allSingleDocs = (List<Document>) getInputParameter(SINGLE_DOCUMENTS_INPUT);
+        List<List<Document>> allMultipleDocs = (List<List<Document>>) getInputParameter(MULTIPLE_DOCUMENTS_INPUT);
+        if (allSingleDocs != null && !allSingleDocs.isEmpty()) {
+            allDocs.addAll(allSingleDocs);
+        }
+        if (allMultipleDocs != null && !allMultipleDocs.isEmpty()) {
+            for (List<Document> allMultipleDoc : allMultipleDocs) {
+                allDocs.addAll(allMultipleDoc);
+            }
+        }
+        if (allDocs.isEmpty()) {
+            throw new ConnectorValidationException("Should provide a list one Document to zip.");
+        }
+
     }
 
     @Override
     public void executeBusinessLogic() throws ConnectorException {
-        @SuppressWarnings("unchecked")
-        List<Document> documentsToZip = (List<Document>) getInputParameter(DOCUMENTS_INPUT);
         String zipFileName = (String) getInputParameter(ZIP_FILE_NAME);
         logger.info("Input validated");
 
         // Create a temporary zip file
         File zipFile;
+
         try {
-            zipFile = createZipFile(documentsToZip, zipFileName);
+            zipFile = createZipFile(allDocs, zipFileName);
             DocumentValue documentValue;
             try {
                 documentValue = convertFileToDocumentValue(zipFile, zipFileName);
@@ -69,7 +84,7 @@ public class ConnectorZip extends AbstractConnector {
         File tempZipFile = File.createTempFile(zipFileName, ".zip");
         ProcessAPI processAPI = getAPIAccessor().getProcessAPI();
         try (FileOutputStream fos = new FileOutputStream(tempZipFile);
-                ZipOutputStream zos = new ZipOutputStream(fos)) {
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
 
             for (Document document : documentsToZip) {
                 byte[] documentContent = processAPI.getDocumentContent(document.getContentStorageId());
