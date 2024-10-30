@@ -5,6 +5,7 @@ import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.document.Document;
 import org.bonitasoft.engine.bpm.document.DocumentNotFoundException;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
+import org.bonitasoft.engine.bpm.document.impl.DocumentImpl;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.junit.Test;
@@ -13,10 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 //
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -65,7 +63,7 @@ public class ConnectorZipTest {
         List<Document> documentsToZip = new ArrayList<>();
         documentsToZip.add(mockDocument);
         final HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ConnectorZip.DOCUMENTS_INPUT, documentsToZip);
+        parameters.put(ConnectorZip.SINGLE_DOCUMENTS_INPUT, documentsToZip);
         parameters.put(ConnectorZip.ZIP_FILE_NAME, "testZip");
         connector.setInputParameters(parameters);
 
@@ -110,12 +108,63 @@ public class ConnectorZipTest {
 
         // Set invalid input
         final HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ConnectorZip.DOCUMENTS_INPUT, null);
+        parameters.put(ConnectorZip.SINGLE_DOCUMENTS_INPUT, null);
+        parameters.put(ConnectorZip.MULTIPLE_DOCUMENTS_INPUT, null);
         parameters.put(ConnectorZip.ZIP_FILE_NAME, "testZip");
         connector.setInputParameters(parameters);
 
+        connector.validateInputParameters();
+    }
+
+    @Test
+    public void testSingleInputParameters() throws Exception {
+        connector = Mockito.spy(new ConnectorZip());
+        processAPI = mock(ProcessAPI.class);
+        apiAccessor = mock(APIAccessor.class);
+
+        doReturn(apiAccessor).when(connector).getAPIAccessor();
+        doReturn(processAPI).when(apiAccessor).getProcessAPI();
+
+        // Set invalid input
+        final HashMap<String, Object> parameters = new HashMap<String, Object>();
+        List<Document> singleDocs = aListOfDocuments();
+        parameters.put(ConnectorZip.SINGLE_DOCUMENTS_INPUT, singleDocs);
+        parameters.put(ConnectorZip.MULTIPLE_DOCUMENTS_INPUT, null);
+        parameters.put(ConnectorZip.ZIP_FILE_NAME, "testZip");
+        connector.setInputParameters(parameters);
 
         connector.validateInputParameters();
     }
+
+    @Test
+    public void testMultipleInputParameters() throws Exception {
+        connector = Mockito.spy(new ConnectorZip());
+        processAPI = mock(ProcessAPI.class);
+        apiAccessor = mock(APIAccessor.class);
+
+        doReturn(apiAccessor).when(connector).getAPIAccessor();
+        doReturn(processAPI).when(apiAccessor).getProcessAPI();
+
+        // Set invalid input
+        final HashMap<String, Object> parameters = new HashMap<String, Object>();
+        List<Document> singleDocs = aListOfDocuments();
+
+        parameters.put(ConnectorZip.SINGLE_DOCUMENTS_INPUT, null);
+        parameters.put(ConnectorZip.MULTIPLE_DOCUMENTS_INPUT, List.of(singleDocs));
+        parameters.put(ConnectorZip.ZIP_FILE_NAME, "testZip");
+        connector.setInputParameters(parameters);
+
+        connector.validateInputParameters();
+    }
+
+    private List<Document> aListOfDocuments() {
+        List<Document> docs = new ArrayList<>();
+        DocumentImpl d = new DocumentImpl();
+        d.setContentMimeType("text");
+        d.setName(UUID.randomUUID().toString() + ".txt");
+        docs.add(d);
+        return docs;
+    }
+
 
 }
